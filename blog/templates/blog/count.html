@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% block title %}
+    Главная страница
+{% endblock %}
+{% block content %}
+    <p>Total blog count: {{ blog_list.count }}</p>
+    <p>Total post count: {{ post_list.count }}</p>
+    <p>Total comment count: {{ comment_list.count }}</p>
+    <h5><a href="{% url "blog:index" %}">View all blogs</a></h5>
+
+{% endblock %}

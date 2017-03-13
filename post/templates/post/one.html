@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    Пост {{ object.id }}
+{% endblock %}
+{% block content %}
+    <h1>Post:</h1>
+    <b>Post number {{ object.id }}</b>  by {{ object.author }}
+    <p>{{ object.text }}</p>
+    {% if object.comment_set.all %}
+        <div>
+            <h1>Comments:</h1>
+            {% for comment in object.comment_set.all %}
+                <i>{{ comment.text }}</i> by {{ comment.author }}<br/>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <p><b>Return to <a href="{% url "blog:blog" pk=object.blog.id %}">blog {{ object.blog.id }}</a></b></p>
+    <b>To </b> <a href="{% url "count" %}">main page</a>
+{% endblock %}
