@@ -5,13 +5,13 @@
 {% endblock %}
 {% block content %}
     <h1>Post:</h1>
-    <b>Post number {{ object.id }}</b>  by {{ object.author }}
+    <b>{{ object.title }}</b>  by {{ object.author }} <img src="{{ object.author.avatar.url }}"/>
     <p>{{ object.text }}</p>
     {% if object.comment_set.all %}
         <div>
             <h1>Comments:</h1>
             {% for comment in object.comment_set.all %}
-                <i>{{ comment.text }}</i> by {{ comment.author }}<br/>
+                <i>{{ comment.text }}</i> by {{ comment.author }} <img src="{{ comment.author.avatar.url }}"/><br/>
             {% endfor %}
         </div>
     {% endif %}

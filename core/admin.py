@@ -7,6 +7,7 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
 
+    readonly_fields = ('admin_avatar',)
     fieldsets = BaseUserAdmin.fieldsets + (
         (u'Дополнительно', {'fields': ('admin_avatar', 'avatar')}),
     )

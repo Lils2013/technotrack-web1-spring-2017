@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from post.models import Post
 
+
 class Comment(models.Model):
 
     post = models.ForeignKey(Post)

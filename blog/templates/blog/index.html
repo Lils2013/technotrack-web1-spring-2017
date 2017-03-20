@@ -5,7 +5,8 @@
 {% endblock %}
 {% block content %}
     {% for blog in object_list %}
-        <b>{{ blog.id }}</b> <a href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a><br/>
+        <b>{{ blog.id }}</b> <a href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a> by {{ blog.author }}
+        <img src="{{ blog.author.avatar.url }}"/><br/>
     {% endfor %}
     <b>To </b> <a href="{% url "count" %}">main page</a>
 {% endblock %}

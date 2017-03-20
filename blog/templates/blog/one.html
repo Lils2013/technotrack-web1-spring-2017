@@ -4,17 +4,18 @@
     Блог {{ object.id }}
 {% endblock %}
 {% block content %}
-    <h2><a href="{% url "blog:index" %}">View all blogs</a></h2>
-    <b>Blog number {{ object.id }}</b>  by {{ object.author }}
+    <b>{{ object.title }}</b>  by {{ object.author }} <img src="{{ object.author.avatar.url }}"/>
     {% if object.post_set.all %}
         <div>
         <h1>Posts:</h1>
         {% for post in object.post_set.all %}
-            <i><a href="{% url "post:post" pk=post.id %}">Post {{ post.id }}</a></i> by {{ post.author }}<br/>
+            <i><a href="{% url "post:post" pk=post.id %}"><b>{{ post.title }}</b></a></i> by {{ post.author }}
+            <img src="{{ post.author.avatar.url }}"/><br/>
 
         {% endfor %}
         </div>
     {% endif %}
     <br/>
+    <b>View </b><a href="{% url "blog:index" %}">all blogs</a><br/>
     <b>To </b> <a href="{% url "count" %}">main page</a>
 {% endblock %}

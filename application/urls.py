@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from core.views import test
+from django.conf import settings
 from blog import views
 
 urlpatterns = [
@@ -24,3 +24,7 @@ urlpatterns = [
     url(r'^post/', include('post.urls')),
     url(r'^$', views.blogcount, name='count'),
 ]
+
+if settings.DEBUG is True:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
