@@ -10,3 +10,6 @@ class Comment(models.Model):
     post = models.ForeignKey(Post)
     text = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __unicode__(self):
+        return 'Comment: ' + self.title

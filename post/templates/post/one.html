@@ -1,20 +1,23 @@
 {% extends "core/base.html" %}
 
-{% block title %}
-    Пост {{ object.id }}
-{% endblock %}
 {% block content %}
+    <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a> >> <a
+        href="{% url "blog:blog" pk=object.blog.id %}">{{ object.blog.title }}</a> >> <a
+        href="{% url "post:post" pk=object.id %}">{{ object.title }}</a></h5> </p>
     <h1>Post:</h1>
-    <b>{{ object.title }}</b>  by {{ object.author }} <img src="{{ object.author.avatar.url }}"/>
+    <b>{{ object.title }}</b>  by {{ object.author.username }} <img src="{{ object.author.avatar.url }}"/>
+    {% if object.author == user %}
+        <a href="{% url "post:editpost" pk=object.id %}">Edit post</a>
+    {% endif %}
     <p>{{ object.text }}</p>
     {% if object.comment_set.all %}
         <div>
             <h1>Comments:</h1>
             {% for comment in object.comment_set.all %}
-                <i>{{ comment.text }}</i> by {{ comment.author }} <img src="{{ comment.author.avatar.url }}"/><br/>
+                <i>{{ comment.text }}</i> by {{ comment.author.username }} <img src="{{ comment.author.avatar.url }}"/>
+                <br/>
             {% endfor %}
         </div>
     {% endif %}
-    <p><b>Return to <a href="{% url "blog:blog" pk=object.blog.id %}">blog {{ object.blog.id }}</a></b></p>
-    <b>To </b> <a href="{% url "count" %}">main page</a>
+    <a href="{% url "post:addcomment" pk=object.id %}">Add comment</a>
 {% endblock %}

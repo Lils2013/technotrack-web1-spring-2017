@@ -2,12 +2,20 @@
 
     <head>
         <title>
-            {% block title %}Страница{% endblock %}
+            Са йт
         </title>
 
     </head>
 
     <body>
+        {% block title %}
+            {% if user.is_anonymous %}
+                <a href="{% url "login" %}">login</a>
+                <a href="{% url "register" %}">register</a>
+            {% else %}
+                {{ user.username }}
+                <a href="{% url "logout" %}">logout</a>
+            {% endif %}{% endblock %}
         {% block content %}{% endblock %}
     </body>
 

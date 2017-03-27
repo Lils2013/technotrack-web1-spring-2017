@@ -1,21 +1,39 @@
 {% extends "core/base.html" %}
 
-{% block title %}
-    Блог {{ object.id }}
-{% endblock %}
 {% block content %}
-    <b>{{ object.title }}</b>  by {{ object.author }} <img src="{{ object.author.avatar.url }}"/>
-    {% if object.post_set.all %}
-        <div>
-        <h1>Posts:</h1>
-        {% for post in object.post_set.all %}
-            <i><a href="{% url "post:post" pk=post.id %}"><b>{{ post.title }}</b></a></i> by {{ post.author }}
-            <img src="{{ post.author.avatar.url }}"/><br/>
-
-        {% endfor %}
-        </div>
+    <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a> >> <a
+        href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a></h5>  </p>
+    <b>{{ object.title }}</b>  by {{ object.author.username }} <img src="{{ object.author.avatar.url }}"/>
+    {% if blog.author == user %}
+        <a href="{% url "blog:editblog" pk=object.id %}">Edit blog</a>
     {% endif %}
     <br/>
-    <b>View </b><a href="{% url "blog:index" %}">all blogs</a><br/>
-    <b>To </b> <a href="{% url "count" %}">main page</a>
+    Description: {{ object.description }}
+    <br/>
+
+    {% if object.category.all %}
+        Categories:
+        {% for category in object.category.all %}
+            {{ category.title }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    {% endif %}
+    <br/>
+    {% if object.like.all %}
+        Like count:
+        {{ object.like.all.count }}
+    {% endif %}
+    {% if object.post_set.all %}
+        <div>
+            <h1>Posts:</h1>
+            {% for post in object.post_set.all %}
+                <i><a href="{% url "post:post" pk=post.id %}"><b>{{ post.title }}</b></a></i> by {{ post.author }}
+                <img src="{{ post.author.avatar.url }}"/>
+                {% if post.author == user %}
+                    <a href="{% url "post:editpost" pk=post.id %}">Edit post</a>
+                {% endif %}
+                <br/>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <a href="{% url "blog:addpost" pk=object.id %}">Add post</a>
 {% endblock %}

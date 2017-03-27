@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'comment.apps.CommentConfig',
     'post.apps.PostConfig',
+    'like.apps.LikeConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'application.urls'
+
+LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = 'main'
+
+LOGOUT_URL = 'logout'
+
+LOGOUT_REDIRECT_URL = 'main'
 
 TEMPLATES = [
     {
@@ -82,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'DB2',
         'USER': 'alexander',
-        'PASSWORD': 'xxx',
+        'PASSWORD': '1Rxwnfeat',
         'HOST': 'localhost',
     }
 }

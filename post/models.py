@@ -11,3 +11,6 @@ class Post(models.Model):
     blog = models.ForeignKey(Blog)
     text = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __unicode__(self):
+        return 'Post: ' + self.title

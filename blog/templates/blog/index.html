@@ -1,12 +1,15 @@
 {% extends "core/base.html" %}
 
-{% block title %}
-    Список блогов
-{% endblock %}
 {% block content %}
+    <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a></h5> </p>
     {% for blog in object_list %}
-        <b>{{ blog.id }}</b> <a href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a> by {{ blog.author }}
-        <img src="{{ blog.author.avatar.url }}"/><br/>
+        <b>{{ blog.id }}</b>
+        <a href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a> by {{ blog.author.username }}
+        <img src="{{ blog.author.avatar.url }}"/>
+        {% if blog.author == user %}
+        <a href="{% url "blog:editblog" pk=blog.id %}">Edit blog</a>
+        {% endif %}<br/>
     {% endfor %}
-    <b>To </b> <a href="{% url "count" %}">main page</a>
+    <p><h5><a href="{% url "blog:addblog" %}">Add blog</a></h5></p>
+    <p><h5><a href="{% url "post:addpost" %}">Add post</a></h5></p>
 {% endblock %}
