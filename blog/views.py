@@ -7,9 +7,37 @@ from post.models import Post
 from comment.models import Comment
 
 
+class SortForm(forms.Form):
+
+    choice = (
+        ('title', 'Title'),
+        ('description', 'Description'),
+    )
+    sort = forms.ChoiceField(choices=choice)
+    search = forms.CharField(required=False)
+
+
 class BlogList(generic.ListView):
     template_name = 'blog/index.html'
     queryset = Blog.objects.all()
+    sortform = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.sortform = SortForm(self.request.GET)
+        return super(BlogList, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(BlogList, self).get_context_data(**kwargs)
+        context['sortform'] = self.sortform
+        return context
+
+    def get_queryset(self):
+        qs = super(BlogList, self).get_queryset()
+        if self.sortform.is_valid():
+            qs = qs.order_by(self.sortform.cleaned_data['sort'])
+            if self.sortform.cleaned_data['search']:
+                qs = qs.filter(title__icontains=self.sortform.cleaned_data['search'])
+        return qs
 
 
 class OneBlog(generic.DetailView):

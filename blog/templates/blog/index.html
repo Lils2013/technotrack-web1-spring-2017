@@ -2,8 +2,14 @@
 
 {% block content %}
     <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a></h5> </p>
+
+    <div>
+        <form method="get" action="{% url "blog:index" %}">
+            {{ sortform }}
+            <input type="submit">
+        </form>
+    </div>
     {% for blog in object_list %}
-        <b>{{ blog.id }}</b>
         <a href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a> by {{ blog.author.username }}
         <img src="{{ blog.author.avatar.url }}"/>
         {% if blog.author == user %}
