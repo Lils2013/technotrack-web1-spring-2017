@@ -19,5 +19,15 @@
             {% endfor %}
         </div>
     {% endif %}
-    <a href="{% url "post:addcomment" pk=object.id %}">Add comment</a>
+    {% if user.is_authenticated %}
+    <h1>Add Comment:</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.errors }}
+        <input type="submit">
+    </form>
+        {% else %}
+        <h2> Login to post comments! </h2>
+    {% endif %}
 {% endblock %}

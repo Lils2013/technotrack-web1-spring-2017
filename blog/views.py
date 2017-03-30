@@ -13,7 +13,7 @@ class SortForm(forms.Form):
         ('title', 'Title'),
         ('description', 'Description'),
     )
-    sort = forms.ChoiceField(choices=choice)
+    sort = forms.ChoiceField(choices=choice, required=False)
     search = forms.CharField(required=False)
 
 
@@ -34,7 +34,8 @@ class BlogList(generic.ListView):
     def get_queryset(self):
         qs = super(BlogList, self).get_queryset()
         if self.sortform.is_valid():
-            qs = qs.order_by(self.sortform.cleaned_data['sort'])
+            if self.sortform.cleaned_data['sort']:
+                qs = qs.order_by(self.sortform.cleaned_data['sort'])
             if self.sortform.cleaned_data['search']:
                 qs = qs.filter(title__icontains=self.sortform.cleaned_data['search'])
         return qs
