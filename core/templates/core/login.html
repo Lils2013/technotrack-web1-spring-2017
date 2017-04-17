@@ -1,11 +1,27 @@
 {% extends "core/base.html" %}
+{% load static %}
 {% block title %}
 {% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static "core/login.css" %}">
+{% endblock %}
+{% load widget_tweaks %}
 {% block content %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-    <input type="submit">
-    </form>
+    <div class="container">
+
+        <form method="post" class="form-signin">
+            {% csrf_token %}
+            <h2 class="form-signin-heading">Please log in</h2>
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field|add_class:'form-control'}}
+                <br/>
+            {% endfor %}
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+        </form>
+
+    </div>
+{% endblock %}
+{% block footer %}
 {% endblock %}

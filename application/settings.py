@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'comment.apps.CommentConfig',
     'post.apps.PostConfig',
     'like.apps.LikeConfig',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

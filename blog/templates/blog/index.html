@@ -1,21 +1,78 @@
 {% extends "core/base.html" %}
-
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static "blog/blog.css" %}">
+{% endblock %}
+{% load widget_tweaks %}
+{% block title %}
+    <nav class="blog-masthead">
+        <div class="container">
+            <nav class="blog-nav">
+                <a class="blog-nav-item" href="{% url "main" %}">Home</a>
+                <a class="blog-nav-item active" href="{% url "blog:index" %}">Index of blogs</a>
+                {% if user.is_anonymous %}
+                    <a class="blog-nav-item" href="{% url "login" %}">Login</a>
+                    <a class="blog-nav-item" href="{% url "register" %}">Register</a>
+                {% else %}
+                    {{ user.username }}
+                    <a class="blog-nav-item" href="{% url "logout" %}">Logout</a>
+                {% endif %}
+            </nav>
+        </div>
+    </nav>
+{% endblock %}
 {% block content %}
-    <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a></h5> </p>
 
-    <div>
-        <form method="get" action="{% url "blog:index" %}">
-            {{ sortform }}
-            <input type="submit">
-        </form>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Blog</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="dialog">lol</div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% for blog in object_list %}
-        <a href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a> by {{ blog.author.username }}
-        <img src="{{ blog.author.avatar.url }}"/>
-        {% if blog.author == user %}
-        <a href="{% url "blog:editblog" pk=blog.id %}">Edit blog</a>
-        {% endif %}<br/>
-    {% endfor %}
-    <p><h5><a href="{% url "blog:addblog" %}">Add blog</a></h5></p>
-    <p><h5><a href="{% url "post:addpost" %}">Add post</a></h5></p>
+    <div class="container">
+        <header class="blog-header">
+            <h1 class="blog-title">List of blogs</h1>
+        </header>
+        <div class="row">
+            <div class="col-sm-8 blog-main">
+                {% for blog in object_list %}
+                    <article class="blog-post">
+                        <h2 class="blog-post-title">{{ blog.title }}</h2>
+                        <p class="blog-post-meta"> by
+                            {{ blog.author.username }} {% if blog.author == user %}
+                                <a class="blog-edit-link" href="{% url "blog:editblog" pk=blog.id %}" data-toggle="modal"
+                                   data-target="#myModal">Edit blog</a>
+                            {% endif %}
+                        </p>
+                        {{ blog.description }}
+                        <br/>
+                        <h5><a href="{% url "blog:blog" pk=blog.id %}">View posts
+                            ({{ blog.post_set.all.count }})</a></h5>
+                    </article><!-- /.blog-post -->
+                {% endfor %}
+            </div>
+            <aside class="col-sm-3 col-sm-offset-1 blog-sidebar">
+                <aside class="sidebar-module sidebar-module-inset">
+                    <h1><a href="{% url "blog:addblog" %}">Add blog</a></h1>
+                    <h1><a href="{% url "post:addpost" %}">Add post</a></h1>
+                    <form method="get" action="{% url "blog:index" %}">
+                        {% for field in sortform %}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            <br/>
+                        {% endfor %}
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Filter</button>
+                    </form>
+                </aside>
+            </aside><!-- /.blog-sidebar -->
+        </div>
+    </div>
 {% endblock %}

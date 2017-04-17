@@ -1,33 +1,76 @@
 {% extends "core/base.html" %}
-
-{% block content %}
-    <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a> >> <a
-        href="{% url "blog:blog" pk=object.blog.id %}">{{ object.blog.title }}</a> >> <a
-        href="{% url "post:post" pk=object.id %}">{{ object.title }}</a></h5> </p>
-    <h1>Post:</h1>
-    <b>{{ object.title }}</b>  by {{ object.author.username }} <img src="{{ object.author.avatar.url }}"/>
-    {% if object.author == user %}
-        <a href="{% url "post:editpost" pk=object.id %}">Edit post</a>
-    {% endif %}
-    <p>{{ object.text }}</p>
-    {% if object.comment_set.all %}
-        <div>
-            <h1>Comments:</h1>
-            {% for comment in object.comment_set.all %}
-                <i>{{ comment.text }}</i> by {{ comment.author.username }} <img src="{{ comment.author.avatar.url }}"/>
-                <br/>
-            {% endfor %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static "blog/blog.css" %}">
+{% endblock %}
+{% load widget_tweaks %}
+{% block title %}
+    <nav class="blog-masthead">
+        <div class="container">
+            <nav class="blog-nav">
+                <a class="blog-nav-item" href="{% url "main" %}">Home</a>
+                <a class="blog-nav-item" href="{% url "blog:index" %}">Index of blogs</a>
+                {% if user.is_anonymous %}
+                    <a class="blog-nav-item" href="{% url "login" %}">Login</a>
+                    <a class="blog-nav-item" href="{% url "register" %}">Register</a>
+                {% else %}
+                    {{ user.username }}
+                    <a class="blog-nav-item" href="{% url "logout" %}">Logout</a>
+                {% endif %}
+            </nav>
         </div>
-    {% endif %}
-    {% if user.is_authenticated %}
-    <h1>Add Comment:</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ form.errors }}
-        <input type="submit">
-    </form>
-        {% else %}
-        <h2> Login to post comments! </h2>
-    {% endif %}
+    </nav>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <header class="blog-header">
+            <h1 class="blog-title">{{ object.title }}</h1>
+            <p class="blog-description">{{ object.description }}</p>
+            <p class="blog-description">by {{ object.author.username }}
+                {% if object.author.avatar %}
+                    <img src="{{ object.author.avatar.url }}"/>
+                {% endif %}
+                {% if object.author == user %}
+                    <a href="{% url "post:editpost" pk=object.id %}">Edit post</a>
+                {% endif %}
+            </p>
+        </header>
+        <div class="row">
+            <div class="col-sm-8 blog-main">
+                <article>{{ object.text }}</article>
+                <div class="commentsdiv" data-url="{% url "post:comments" pk=object.id %}">
+                    {% include "post/comments.html" %}
+                </div>
+                {% if user.is_authenticated %}
+                    <form method="post" class="form-signin">
+                        {% csrf_token %}
+                        <h2>Add Comment:</h2>
+                        <div class="form-group">
+                            {% for field in form %}
+                                <label for="{{ field.id_for_label }}">Comment</label>
+                                {{ field|add_class:'form-control' }}
+                                <br/>
+                            {% endfor %}
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">Add comment</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <h2> Login to post comments! </h2>
+                {% endif %}
+            </div>
+            <aside class="col-sm-3 col-sm-offset-1 blog-sidebar">
+                <aside class="sidebar-module sidebar-module-inset">
+                    <h3>Like count:<span id="likes-{{ object.id }}">{{ object.like_set.all.count }}</span></h3>
+                    {% if liked %}
+                        <h5>You've already liked this post</h5>
+                    {% else %}
+                        <button class="btn ajaxlike" data-url="{% url "post:likeajax" pk=object.id %}"
+                                data-postid="{{ object.id }}">Like
+                        </button>
+                    {% endif %}
+                    <h1><a href="{% url "blog:blog" pk=object.blog.id %}">Return to blog</a></h1>
+                </aside>
+            </aside><!-- /.blog-sidebar -->
+        </div>
+    </div>
 {% endblock %}

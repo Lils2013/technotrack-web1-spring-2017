@@ -12,4 +12,4 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     def __unicode__(self):
-        return 'Comment: ' + self.title
+        return 'Comment: ' + self.text

@@ -1,22 +1,44 @@
-<html>
+{% load static %}
+<!DOCTYPE html>
 
-    <head>
-        <title>
-            Са йт
-        </title>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static "core/dist/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "chosen/chosen.min.css" %}">
+    {% block css %}
+    {% endblock %}
+    <title>
+        Са йт
+    </title>
 
-    </head>
+</head>
 
-    <body>
-        {% block title %}
-            {% if user.is_anonymous %}
-                <a href="{% url "login" %}">login</a>
-                <a href="{% url "register" %}">register</a>
-            {% else %}
-                {{ user.username }}
-                <a href="{% url "logout" %}">logout</a>
-            {% endif %}{% endblock %}
-        {% block content %}{% endblock %}
-    </body>
+<body>
+{% block title %}
+    {% if user.is_anonymous %}
+        <a href="{% url "login" %}">login</a>
+        <a href="{% url "register" %}">register</a>
+    {% else %}
+        {{ user.username }}
+        <a href="{% url "logout" %}">logout</a>
+    {% endif %}{% endblock %}
+{% block content %}{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="{% static "core/dist/js/bootstrap.min.js" %}"></script>
+<script src="{% static "chosen/chosen.jquery.min.js" %}"></script>
+<script src="{% static "core/js/base.js" %}"></script>
+{% block footer %}
+    <footer class="blog-footer">
+        <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by a cool guy.</p>
+        <p>
+            <a href="#">Back to top</a>
+        </p>
+    </footer>
+{% endblock %}
+</body>
 
 </html>

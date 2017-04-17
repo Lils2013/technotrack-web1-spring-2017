@@ -1,38 +1,93 @@
 {% extends "core/base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static "blog/blog.css" %}">
+{% endblock %}
 
-{% block content %}
-    <p><h5><a href="{% url "main" %}">Main page</a> >> <a href="{% url "blog:index" %}">Index of blogs</a> >> <a
-        href="{% url "blog:blog" pk=blog.id %}">{{ blog.title }}</a></h5>  </p>
-    <b>{{ object.title }}</b>  by {{ object.author.username }} <img src="{{ object.author.avatar.url }}"/>
-    {% if blog.author == user %}
-        <a href="{% url "blog:editblog" pk=object.id %}">Edit blog</a>
-    {% endif %}
-    <br/>
-    Description: {{ object.description }}
-    <br/>
-    {% if object.category.all %}
-        Categories:
-        {% for category in object.category.all %}
-            {{ category.title }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    {% endif %}
-    <br/>
-    {% if object.like.all %}
-        Like count:
-        {{ object.like.all.count }}
-    {% endif %}
-    {% if object.post_set.all %}
-        <div>
-            <h1>Posts:</h1>
-            {% for post in object.post_set.all %}
-                <i><a href="{% url "post:post" pk=post.id %}"><b>{{ post.title }}</b></a></i> by {{ post.author }}
-                <img src="{{ post.author.avatar.url }}"/>
-                {% if post.author == user %}
-                    <a href="{% url "post:editpost" pk=post.id %}">Edit post</a>
+{% block title %}
+    <nav class="blog-masthead">
+        <div class="container">
+            <nav class="blog-nav">
+                <a class="blog-nav-item" href="{% url "main" %}">Home</a>
+                <a class="blog-nav-item" href="{% url "blog:index" %}">Index of blogs</a>
+                {% if user.is_anonymous %}
+                    <a class="blog-nav-item" href="{% url "login" %}">Login</a>
+                    <a class="blog-nav-item" href="{% url "register" %}">Register</a>
+                {% else %}
+                    {{ user.username }}
+                    <a class="blog-nav-item" href="{% url "logout" %}">Logout</a>
                 {% endif %}
-                <br/>
-            {% endfor %}
+            </nav>
         </div>
-    {% endif %}
-    <a href="{% url "blog:addpost" pk=object.id %}">Add post</a>
+    </nav>
+{% endblock %}
+{% block content %}
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Blog</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="dialog">lol</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="blog-header">
+            <h1 class="blog-title">{{ object.title }}</h1>
+            <p class="blog-description">{{ object.description }}</p>
+            <p class="blog-description">by {{ object.author.username }} {% if blog.author == user %}
+                <a class="blog-edit-link" href="{% url "blog:editblog" pk=object.id %}" data-toggle="modal"
+                   data-target="#myModal">
+                    Edit blog
+                </a>
+            {% endif %}
+            </p>
+        </header>
+
+        <div class="row">
+            <div class="col-sm-8 blog-main">
+                {% for post in object.post_set.all %}
+                    <article class="blog-post">
+                        <h2 class="blog-post-title">{{ post.title }}</h2>
+                        <p class="blog-post-meta"> by
+                            {{ post.author.username }}
+                            {% if post.author.avatar %}
+                                <img src="{{ post.author.avatar.url }}"/>
+                            {% endif %}
+                            {% if post.author == user %}
+                                <a href="{% url "post:editpost" pk=post.id %}">Edit post</a>
+                            {% endif %}
+                        </p>
+                        <article>{{ post.text }}</article>
+                        <br/>
+                        <h5><a href="{% url "post:post" pk=post.id %}">View comments
+                            ({{ post.comment_set.all.count }})</a></h5>
+                    </article><!-- /.blog-post -->
+                {% endfor %}
+            </div>
+            <aside class="col-sm-3 col-sm-offset-1 blog-sidebar">
+                <aside class="sidebar-module sidebar-module-inset">
+                    <h1><a href="{% url "blog:addpost" pk=object.id %}">Add post</a></h1>
+                    <h4>About</h4>
+                    {% if object.category.all %}
+                        Categories:
+                        {% for category in object.category.all %}
+                            {{ category.title }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <br/>
+                </aside>
+            </aside><!-- /.blog-sidebar -->
+        </div>
+    </div>
 {% endblock %}

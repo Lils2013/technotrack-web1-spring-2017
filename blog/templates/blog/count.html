@@ -1,9 +1,45 @@
 {% extends "core/base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static "blog/blog.css" %}">
+{% endblock %}
+{% load widget_tweaks %}
+{% block title %}
+    <nav class="blog-masthead">
+        <div class="container">
+            <nav class="blog-nav">
+                <a class="blog-nav-item active" href="{% url "main" %}">Home</a>
+                <a class="blog-nav-item" href="{% url "blog:index" %}">Index of blogs</a>
+                {% if user.is_anonymous %}
+                    <a class="blog-nav-item" href="{% url "login" %}">Login</a>
+                    <a class="blog-nav-item" href="{% url "register" %}">Register</a>
+                {% else %}
+                    {{ user.username }}
+                    <a class="blog-nav-item" href="{% url "logout" %}">Logout</a>
+                {% endif %}
+            </nav>
+        </div>
+    </nav>
+{% endblock %}
 {% block content %}
-    <p><h5><a href="{% url "main" %}">Main page</a></h5></p>
-    <p>Total blog count: {{ blog_list.count }}</p>
-    <p>Total post count: {{ post_list.count }}</p>
-    <p>Total comment count: {{ comment_list.count }}</p>
-    <h5><a href="{% url "blog:index" %}">View all blogs</a></h5>
+        <div class="container">
 
+        <div class="row">
+
+            <div class="col-sm-10 blog-main">
+                <header class="blog-header">
+                    <h1 class="blog-title">Main page</h1>
+                </header>
+                <article>
+                <h2>Total blog count: {{ blog_list.count }}</h2>
+                <h2>Total post count: {{ post_list.count }}</h2>
+                <h2>Total comment count: {{ comment_list.count }}</h2>
+                    </article>
+                <br/>
+                <br/>
+                <br/>
+
+            </div>
+        </div>
+        </div>
 {% endblock %}

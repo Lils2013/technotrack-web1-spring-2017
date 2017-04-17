@@ -1,0 +1,13 @@
+{% if object.comment_set.all %}
+    <h2>Comments:</h2>
+
+    {% for comment in object.comment_set.all %}
+        <div style="margin-bottom: 20px;border: 2px solid #428bca;padding: 10px;">
+            <i>{{ comment.text }}</i> <br/>
+            by {{ comment.author.username }}
+            {% if comment.author.avatar %}
+                <img src="{{ comment.author.avatar.url }}"/>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}

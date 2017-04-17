@@ -9,7 +9,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('like', '0001_initial'),
         ('blog', '0008_auto_20170326_2026'),
     ]
 

@@ -1,4 +1,5 @@
 from django import forms
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
@@ -57,6 +58,10 @@ class EditBlog(generic.UpdateView):
 
     def get_success_url(self):
         return reverse('blog:blog',args=(self.object.id,))
+
+    def form_valid(self, form):
+        response = super(EditBlog, self).form_valid(form)
+        return HttpResponse('OK')
 
 
 class AddBlog(generic.CreateView):

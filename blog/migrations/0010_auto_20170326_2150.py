@@ -8,7 +8,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('like', '0001_initial'),
         ('blog', '0009_blog_like'),
     ]
 
