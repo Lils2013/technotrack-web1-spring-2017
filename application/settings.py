@@ -11,23 +11,25 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from configparser import RawConfigParser
 
+config = RawConfigParser()
+config.read('../conf/project.conf')
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5)(_i%z&&er4vn$4%o4!^ptqcsnp6lbhp+d+3kk*i3_5)c(o7n'
+SECRET_KEY = config.get('general','SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['project','127.0.0.1']
 
-
+ADMINS = []
 # Application definition
 
 INSTALLED_APPS = [
@@ -90,9 +92,9 @@ WSGI_APPLICATION = 'application.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'DB2',
-        'USER': 'alexander',
-        'PASSWORD': '1Rxwnfeat',
+        'NAME': config.get('database','NAME'),
+        'USER': config.get('database','USER'),
+        'PASSWORD': config.get('database','PASSWORD'),
         'HOST': 'localhost',
     }
 }
@@ -140,4 +142,54 @@ AUTH_USER_MODEL = 'core.User'
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '/home/alexander/project/media/'
+MEDIA_ROOT = config.get('static','MEDIA_ROOT')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/home/alexander/project/log/debug.log',
+            'formatter': 'verbose',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    }
+}
+
+STATIC_ROOT = config.get('static','STATIC_ROOT')
+STATICFILES_DIRS = ('/home/alexander/project/src/core/static/', '/home/alexander/project/src/blog/static/',)

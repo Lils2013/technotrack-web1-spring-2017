@@ -1,51 +1,20 @@
-{#{% extends "core/base.html" %}#}
 {% load static %}
 {% block css %}
     <link rel="stylesheet" href="{% static "blog/blog.css" %}">
 {% endblock %}
 {% load widget_tweaks %}
-{#{% block title %}#}
-{#    <header class="blog-masthead">#}
-{#        <div class="container">#}
-{#            <nav class="blog-nav">#}
-{#                <a class="blog-nav-item" href="{% url "main" %}">Home</a>#}
-{#                <a class="blog-nav-item" href="{% url "blog:index" %}">Index of blogs</a>#}
-{#                {% if user.is_anonymous %}#}
-{#                    <a class="blog-nav-item" href="{% url "login" %}">Login</a>#}
-{#                    <a class="blog-nav-item" href="{% url "register" %}">Register</a>#}
-{#                {% else %}#}
-{#                    {{ user.username }}#}
-{#                    <a class="blog-nav-item" href="{% url "logout" %}">Logout</a>#}
-{#                {% endif %}#}
-{#            </nav>#}
-{#        </div>#}
-{#    </header>#}
-{#{% endblock %}#}
-{#{% block content %}#}
-{##}
-{#    <div class="container">#}
-{#        <div class="row">#}
-{#            <div class="col-sm-12 blog-main">#}
-{#                <header class="blog-header">#}
-{#                    <h1 class="blog-title">Edit blog</h1>#}
-{#                </header>#}
 <form method="post" class="ajaxform" data-url="{% url "blog:editblog" pk=object.id %}">
     {% csrf_token %}
     {% for field in form %}
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {% if field == form.category %}
-                                        {{ field|add_class:'chosen-select form-control' }}
+            {{ field|add_class:'chosen-select form-control' }}
         {% else %}
-                                        {{ field|add_class:'form-control' }}
+            {{ field|add_class:'form-control' }}
         {% endif %}
         <br/>
     {% endfor %}
     <button class="btn btn-lg btn-primary btn-block btn-marg" type="submit">Edit</button>
 </form>
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
 <script src="{% static "chosen/chosen.jquery.min.js" %}"></script>
 <script src="{% static "core/js/base.js" %}"></script>
-
-{#{% endblock %}#}
